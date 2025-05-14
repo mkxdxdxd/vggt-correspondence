@@ -1,0 +1,138 @@
+dataset:
+  name: "co3d_duster"
+  train_bs: 1
+  num_viewpoints: 3
+  num_ref: 2
+  target_idx: 1
+  train_width: 512
+  train_height: 512
+  meta_paths:
+    - "./data/fashion_meta.json"
+  # Margin of frame indexes between ref and tgt images
+  sample_margin: 30  
+
+solver:
+  gradient_accumulation_steps: 1
+  mixed_precision: 'no'
+  enable_xformers_memory_efficient_attention: True 
+  gradient_checkpointing: False
+  max_train_steps: 500000
+  max_grad_norm: 1.0
+  # lr
+  learning_rate: 1.0e-5
+  scale_lr: False 
+  lr_warmup_steps: 1
+  lr_scheduler: 'constant'
+
+  # optimizer
+  use_8bit_adam: True 
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_weight_decay:  1.0e-2
+  adam_epsilon: 1.0e-8
+
+val:
+  validation_steps: 2000
+
+noise_scheduler_kwargs:
+  num_train_timesteps: 1000
+  beta_start:          0.00085
+  beta_end:            0.012
+  beta_schedule:       "scaled_linear"
+  steps_offset:        1
+  clip_sample:         false
+
+# base_model_path: './pretrained_weights/sd-image-variations-diffusers'
+vae_model_path: '/media/multiview-gen/checkpoints/sd-vae-ft-mse'
+image_encoder_path: '/media/multiview-gen/checkpoints/image_encoder'
+model_path: '/media/multiview-gen/checkpoints/norm'
+model_path_aux: '/mnt/image-net-full/j1nhwa.kim/interns/minseop.kwak/multiview-gen/genwarp/checkpoints/multi_best_1000000'
+model_path_scratch: '/mnt/image-net-full/j1nhwa.kim/interns/minseop.kwak/multiview-gen/genwarp/checkpoints/original_two'
+image_encoder_path_scratch: 'laion/CLIP-ViT-H-14-laion2B-s32B-b79K'
+
+debugging: true
+
+use_ref_expand: false
+
+pointmap_norm: true
+both_loss: false
+
+feature_fusion_type: "attention_full_sharing"
+train_from_scratch: false
+pointmap_lognorm: true
+
+embedder_from_scratch: false
+use_depthmap: true
+use_conf: false
+use_plucker: false
+gt_cor_reg: false
+use_warped_img_cond: false
+
+use_gt_cor: false
+pure_gt: false
+gt_mask_threshold: 0.004
+
+multitask: false
+switcher: false
+multitask_mode: "loc" 
+multitask_weighting: false
+image_weight: 0.9
+ref_net_expand: false
+
+use_mesh: true
+downsample: true
+use_normal: true
+use_normal_mask: true
+downsample_by: 4
+
+point_masking: false
+masking_percent: 0.9
+
+find_unused_params: false
+use_lora: false
+weight_dtype: 'fp32'  # [fp16, fp32]
+uncond_ratio: 0.1
+noise_offset: 0.05
+snr_gamma: 5.0
+enable_zero_snr: True 
+pose_guider_pretrain: False
+
+seed: 12580
+resume_from_checkpoint: ''
+checkpointing_steps: 1000
+save_model_epoch_interval: 5
+exp_name: 'debug'
+output_dir: './exp_output' 
+
+compute_environment: LOCAL_MACHINE
+debug: false
+distributed_type: MULTI_GPU
+downcast_bf16: 'no'
+gpu_ids: 0,1,2,3,4,5,6,7
+machine_rank: 0
+main_training_function: main
+mixed_precision: fp16
+num_machines: 8
+num_processes: 8
+rdzv_backend: static
+same_network: true
+tpu_env: []
+tpu_use_cluster: false
+tpu_use_sudo: false
+use_cpu: false
+main_process_port: 29400
+# debugging: false
+
+# feature_fusion_type: "attention_full_sharing"
+# train_from_scratch: false
+# embedder_from_scratch: false
+# use_depthmap: true
+# use_conf: false
+# use_plucker: false
+# gt_cor_reg: false
+
+# use_mesh: true
+# downsample: true
+# use_normal: true
+# use_normal_mask: true
+# downsample_by: 4
